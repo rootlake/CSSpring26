@@ -74,15 +74,23 @@ body {
   border-color: var(--accent);
 }
 
+/* Virtual viewport is N× larger, then scaled down so thumbnails show more of each page */
 .graph-card-thumb {
+  --gallery-thumb-zoom: 2.4;
+  position: relative;
   aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--bg);
 }
 
 .graph-card-thumb iframe {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% * var(--gallery-thumb-zoom));
+  height: calc(100% * var(--gallery-thumb-zoom));
+  transform: scale(calc(1 / var(--gallery-thumb-zoom)));
+  transform-origin: 0 0;
   border: none;
   pointer-events: none;
 }
@@ -110,6 +118,19 @@ body {
 .graph-card-tag.data { background: rgba(6, 182, 212, 0.2); color: #67e8f9; }
 .graph-card-tag.physics { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
 .graph-card-tag.chemistry { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+
+.gallery-heading {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.gallery-heading:not(:first-child) {
+  margin-top: 2.25rem;
+}
 
 @media (max-width: 1200px) {
   .graph-grid { grid-template-columns: repeat(3, 1fr); }
