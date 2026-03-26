@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parametric Curve</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="graph-page">
+  <div class="graph-wrapper">
+    <div class="graph-container" id="plot"></div>
+  </div>
+  <script>
+    const t = [];
+    for (let i = 0; i <= 2 * Math.PI; i += 0.02) {
+      t.push(i);
+    }
+    const x = t.map(v => 3 * Math.cos(v));
+    const y = t.map(v => 2 * Math.sin(v));
+
+    Plotly.newPlot('plot', [{
+      x, y,
+      type: 'scatter',
+      mode: 'lines',
+      name: 'x = 3cos(t), y = 2sin(t)',
+      line: { width: 2.5, color: '#22d3ee' }
+    }], {
+      margin: { t: 40, r: 40, b: 50, l: 50 },
+      xaxis: { title: 'x', zeroline: true, gridcolor: '#404040', color: '#e8e8e8' },
+      yaxis: { title: 'y', zeroline: true, gridcolor: '#404040', color: '#e8e8e8', scaleanchor: 'x' },
+      showlegend: true,
+      paper_bgcolor: '#252525',
+      plot_bgcolor: '#252525',
+      font: { color: '#e8e8e8' },
+      legend: { font: { color: '#e8e8e8' } }
+    }, { responsive: true });
+  </script>
+</body>
+</html>

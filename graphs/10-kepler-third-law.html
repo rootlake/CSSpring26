@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kepler's Third Law - Solar System</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="graph-page">
+  <div class="graph-wrapper">
+    <div class="graph-container" id="plot"></div>
+  </div>
+  <script>
+    const planets = [
+      { name: 'Mercury', a: 0.387, T: 0.241 },
+      { name: 'Venus', a: 0.723, T: 0.615 },
+      { name: 'Earth', a: 1.0, T: 1.0 },
+      { name: 'Mars', a: 1.524, T: 1.881 },
+      { name: 'Jupiter', a: 5.203, T: 11.86 },
+      { name: 'Saturn', a: 9.537, T: 29.46 },
+      { name: 'Uranus', a: 19.19, T: 84.01 },
+      { name: 'Neptune', a: 30.07, T: 164.8 }
+    ];
+
+    const logA = planets.map(p => Math.log10(p.a));
+    const logT = planets.map(p => Math.log10(p.T));
+
+    const n = logA.length;
+    const sumX = logA.reduce((a, b) => a + b, 0);
+    const sumY = logT.reduce((a, b) => a + b, 0);
+    const sumXY = logA.reduce((s, x, i) => s + x * logT[i], 0);
+    const sumX2 = logA.reduce((s, x) => s + x * x, 0);
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+
+    const fitX = [Math.min(...logA), Math.max(...logA)];
+    const fitY = fitX.map(x => slope * x + intercept);
+
+    Plotly.newPlot('plot', [
+      {
+        x: logA,
+        y: logT,
+        type: 'scatter',
+        mode: 'markers+text',
+        name: 'Planets',
+        marker: { size: 14, color: '#22d3ee' },
+        text: planets.map(p => p.name),
+        textposition: 'top center',
+        textfont: { size: 11 }
+      },
+      {
+        x: fitX,
+        y: fitY,
+        type: 'scatter',
+        mode: 'lines',
+        name: `Fit: slope = ${slope.toFixed(2)} (theory: 1.5)`,
+        line: { width: 3, dash: 'dash', color: '#f59e0b' }
+      }
+    ], {
+      margin: { t: 50, r: 40, b: 50, l: 50 },
+      xaxis: {
+        title: 'log₁₀(semi-major axis / AU)',
+        type: 'linear',
+        gridcolor: '#404040',
+        color: '#e8e8e8'
+      },
+      yaxis: {
+        title: 'log₁₀(orbital period / yr)',
+        type: 'linear',
+        gridcolor: '#404040',
+        color: '#e8e8e8'
+      },
+      showlegend: true,
+      paper_bgcolor: '#252525',
+      plot_bgcolor: '#252525',
+      font: { color: '#e8e8e8' },
+      legend: { font: { color: '#e8e8e8' } },
+      title: { text: "Kepler's Third Law: T² ∝ a³", font: { size: 16 } }
+    }, { responsive: true });
+  </script>
+</body>
+</html>

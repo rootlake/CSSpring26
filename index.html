@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MathSciGraphs - High School Math & Science</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <main class="landing">
+    <header class="landing-header">
+      <h1>MathSciGraphs</h1>
+      <p class="subtitle">Code-based graphs for high school math and science</p>
+    </header>
+
+    <section class="graph-grid">
+      <a href="graphs/01-function-plot.html" class="graph-card">
+        <div class="graph-card-thumb">
+          <iframe src="graphs/01-function-plot.html" title="Function plot"></iframe>
+        </div>
+        <div class="graph-card-body">
+          <h3 class="graph-card-title">Function plot (y = f(x))</h3>
+          <span class="graph-card-tag math">Math</span>
+        </div>
+      </a>
+      <a href="graphs/02-parametric.html" class="graph-card">
+        <div class="graph-card-thumb">
+          <iframe src="graphs/02-parametric.html" title="Parametric"></iframe>
+        </div>
+        <div class="graph-card-body">
+          <h3 class="graph-card-title">Parametric curve</h3>
+          <span class="graph-card-tag math">Math</span>
+        </div>
+      </a>
+      <a href="graphs/03-polar.html" class="graph-card">
+        <div class="graph-card-thumb">
+          <iframe src="graphs/03-polar.html" title="Polar"></iframe>
+        </div>
+        <div class="graph-card-body">
+          <h3 class="graph-card-title">Polar plot</h3>
+          <span class="graph-card-tag math">Math</span>
+        </div>
+      </a>
+      <a href="graphs/04-bar-chart.html" class="graph-card">
+        <div class="graph-card-thumb">
+          <iframe src="graphs/04-bar-chart.html" title="Bar chart"></iframe>
+        </div>
+        <div class="graph-card-body">
+          <h3 class="graph-card-title">Bar chart</h3>
+          <span class="graph-card-tag data">Data</span>
+        </div>
+      </a>
+      <a href="graphs/05-scatter-histogram.html" class="graph-card">
+        <div class="graph-card-thumb">
+          <iframe src="graphs/05-scatter-histogram.html" title="Scatter histogram"></iframe>
+        </div>
+        <div class="graph-card-body">
+          <h3 class="graph-card-title">Scatter & histogram</h3>
+          <span class="graph-card-tag data">Data</span>
+        </div>
+      </a>
+      <a href="graphs/06-physics-vectors.html" class="graph-card">
+        <div class="graph-card-thumb">
+          <iframe src="graphs/06-physics-vectors.html" title="Vectors"></iframe>
+        </div>
+        <div class="graph-card-body">
+          <h3 class="graph-card-title">Vector diagram</h3>
+          <span class="graph-card-tag physics">Physics</span>
+        </div>
+      </a>
+      <a href="graphs/07-free-body.html" class="graph-card">
+        <div class="graph-card-thumb">
+          <iframe src="graphs/07-free-body.html" title="Free-body"></iframe>
+        </div>
+        <div class="graph-card-body">
+          <h3 class="graph-card-title">Free-body diagram</h3>
+          <span class="graph-card-tag physics">Physics</span>
+        </div>
+      </a>
+      <a href="graphs/08-circuit.html" class="graph-card">
+        <div class="graph-card-thumb">
+          <iframe src="graphs/08-circuit.html" title="Circuit"></iframe>
+        </div>
+        <div class="graph-card-body">
+          <h3 class="graph-card-title">Circuit diagram</h3>
+          <span class="graph-card-tag physics">Physics</span>
+        </div>
+      </a>
+      <a href="graphs/10-kepler-third-law.html" class="graph-card">
+        <div class="graph-card-thumb">
+          <iframe src="graphs/10-kepler-third-law.html" title="Kepler"></iframe>
+        </div>
+        <div class="graph-card-body">
+          <h3 class="graph-card-title">Kepler's third law</h3>
+          <span class="graph-card-tag physics">Physics</span>
+        </div>
+      </a>
+      <a href="graphs/09-chemistry-phase.html" class="graph-card">
+        <div class="graph-card-thumb">
+          <iframe src="graphs/09-chemistry-phase.html" title="Phase diagram"></iframe>
+        </div>
+        <div class="graph-card-body">
+          <h3 class="graph-card-title">Phase diagram</h3>
+          <span class="graph-card-tag chemistry">Chemistry</span>
+        </div>
+      </a>
+    </section>
+
+    <section class="guide-section" id="guide">
+      <h2>Teacher Guide: LLM Images vs Code-Based Graphs</h2>
+
+      <h3>LLM image generation (DALL-E, Midjourney, etc.)</h3>
+      <ul>
+        <li><strong>One-off</strong>: Each image is unique; regenerating yields different results</li>
+        <li><strong>Hard to edit</strong>: Can't tweak axes, data, or labels without starting over</li>
+        <li><strong>No data fidelity</strong>: Models approximate; numbers and curves may be wrong</li>
+        <li><strong>Use case</strong>: Illustrations, concept art, rough sketches</li>
+      </ul>
+
+      <h3>Code-based graphs (AI-assisted)</h3>
+      <ul>
+        <li><strong>Editable</strong>: Change the equation, data, or styling in code</li>
+        <li><strong>Reproducible</strong>: Same input always yields same output</li>
+        <li><strong>Data-accurate</strong>: Libraries compute correct values</li>
+        <li><strong>Use case</strong>: Teaching, assessments, presentations, worksheets</li>
+      </ul>
+
+      <h3>Workflow</h3>
+      <ol>
+        <li>Describe the graph you want in Cursor chat</li>
+        <li>AI generates HTML/JS code</li>
+        <li>Save as <code>graphs/XX-name.html</code></li>
+        <li>Open in browser (double-click or <code>open graphs/01-function-plot.html</code>)</li>
+      </ol>
+
+      <h3>Prompt Keywords by Graph Type</h3>
+      <table>
+        <thead>
+          <tr><th>Graph Type</th><th>Library</th><th>Example prompt</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Function plot (y = f(x))</td><td>Plotly.js</td><td>"Use Plotly.js to plot y = x² − 2x − 3 from -5 to 5"</td></tr>
+          <tr><td>Parametric curve</td><td>Plotly.js</td><td>"Use Plotly.js to plot x = 3cos(t), y = 2sin(t) for t in [0, 2π]"</td></tr>
+          <tr><td>Polar plot</td><td>Plotly.js</td><td>"Use Plotly.js to make a polar plot of r = 2cos(3θ)"</td></tr>
+          <tr><td>Bar chart</td><td>Chart.js</td><td>"Use Chart.js to make a bar chart of [22, 19, 18, 21, 24]"</td></tr>
+          <tr><td>Scatter plot</td><td>Plotly.js</td><td>"Use Plotly.js scatter plot with these x,y points"</td></tr>
+          <tr><td>Vector diagram</td><td>D3.js</td><td>"Use D3.js to draw force vectors F₁ and F₂ from origin"</td></tr>
+          <tr><td>Kepler's law</td><td>Plotly.js</td><td>"Plot Kepler's third law with 8 planets on log scale, fit line"</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Key library names</h3>
+      <ul>
+        <li><strong>Plotly.js</strong> — function plots, parametric, polar, scatter, histogram, phase diagrams</li>
+        <li><strong>Chart.js</strong> — bar, line, pie (simpler API)</li>
+        <li><strong>D3.js</strong> — vectors, diagrams, custom SVG</li>
+      </ul>
+
+      <h3>When to Use Python Instead</h3>
+      <p>Use Python when you need symbolic math (SymPy), ODEs (scipy), or heavy computation. Workflow: Python script → <code>fig.write_html('output.html')</code> → open in browser.</p>
+    </section>
+  </main>
+</body>
+</html>

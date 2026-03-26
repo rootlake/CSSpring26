@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bar Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="graph-page">
+  <div class="graph-wrapper">
+    <div class="graph-container">
+      <canvas id="chart"></canvas>
+    </div>
+  </div>
+  <script>
+    Chart.defaults.color = '#e8e8e8';
+    Chart.defaults.borderColor = '#404040';
+    const ctx = document.getElementById('chart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        datasets: [{
+          label: 'Temperature (°C)',
+          data: [22, 19, 18, 21, 24, 26],
+          backgroundColor: 'rgba(99, 102, 241, 0.6)',
+          borderColor: 'rgba(139, 92, 246, 1)',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Temperature (°C)' },
+            grid: { color: '#404040' }
+          },
+          x: {
+            title: { display: true, text: 'Day' },
+            grid: { color: '#404040' }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

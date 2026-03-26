@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Vector Diagram</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="graph-page">
+  <div class="graph-wrapper">
+    <div class="graph-container" id="svg-container"></div>
+  </div>
+  <script>
+    const width = 600;
+    const height = 400;
+    const origin = { x: 100, y: height / 2 };
+
+    const svg = d3.select('#svg-container')
+      .append('svg')
+      .attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .style('display', 'block');
+
+    const defs = svg.append('defs');
+    defs.append('marker')
+      .attr('id', 'arrowhead')
+      .attr('viewBox', '-0 -5 10 10')
+      .attr('refX', 8)
+      .attr('refY', 0)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M 0,-5 L 10,0 L 0,5 z')
+      .attr('fill', 'currentColor');
+
+    const vectors = [
+      { x: 200, y: -80, label: 'F₁', color: '#f59e0b' },
+      { x: 150, y: 60, label: 'F₂', color: '#22d3ee' },
+      { x: 350, y: -20, label: 'F₁ + F₂', color: '#34d399' }
+    ];
+
+    const g = svg.append('g').attr('transform', `translate(${origin.x}, ${origin.y})`);
+
+    vectors.forEach(v => {
+      g.append('line')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', v.x)
+        .attr('y2', v.y)
+        .attr('stroke', v.color)
+        .attr('stroke-width', 4)
+        .attr('marker-end', 'url(#arrowhead)');
+      g.append('text')
+        .attr('x', v.x + 10)
+        .attr('y', v.y)
+        .attr('fill', v.color)
+        .attr('font-size', 14)
+        .attr('font-weight', 'bold')
+        .text(v.label);
+    });
+
+    g.append('circle').attr('cx', 0).attr('cy', 0).attr('r', 4).attr('fill', '#e8e8e8');
+  </script>
+</body>
+</html>

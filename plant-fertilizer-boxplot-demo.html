@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plant height by fertilizer treatment</title>
+  <style>
+    :root {
+      --text: #1a2332;
+      --muted: #5c6b7f;
+      --bg: #f8fafc;
+      --frame-border: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      min-height: 100dvh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      padding: 1rem 1.25rem;
+    }
+
+    header {
+      flex: 0 0 auto;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: clamp(1.25rem, 3vw, 1.65rem);
+      font-weight: 650;
+      margin: 0 0 0.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.45;
+      max-width: 42rem;
+    }
+
+    /* Fixed band for the plot so the table below does not steal flex space from the chart */
+    .chart-area {
+      flex: 0 0 auto;
+      width: 100%;
+      height: clamp(320px, 52vh, 580px);
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 0.5rem 0 1rem;
+      box-sizing: border-box;
+    }
+
+    .chart-frame {
+      width: 80%;
+      max-width: 100%;
+      height: 100%;
+      min-height: 280px;
+      border: 2px solid var(--frame-border);
+      border-radius: 10px;
+      background: #fff;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    #chart {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .data-section {
+      flex: 0 0 auto;
+      width: 100%;
+      padding: 0 0 1.5rem;
+      margin-top: 0.25rem;
+    }
+
+    .data-section h2 {
+      font-size: 1.05rem;
+      font-weight: 650;
+      margin: 0 0 0.65rem;
+      color: var(--text);
+    }
+
+    .data-section .data-panel {
+      width: min(100%, 72rem);
+      max-width: 100%;
+      margin: 0 auto;
+      border: 2px solid var(--frame-border);
+      border-radius: 10px;
+      background: #fff;
+      padding: 0.85rem 1rem 1rem;
+      box-sizing: border-box;
+    }
+
+    .data-section .data-intro {
+      margin: 0 0 0.85rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .data-columns {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.85rem 1.1rem;
+      align-items: start;
+    }
+
+    @media (max-width: 52rem) {
+      .data-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .data-col {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      min-width: 0;
+    }
+
+    .data-col h3 {
+      margin: 0;
+      padding: 0.5rem 0.65rem;
+      font-size: 0.88rem;
+      font-weight: 650;
+      border-bottom: 2px solid var(--col-accent, var(--frame-border));
+      background: #f8fafc;
+    }
+
+    .data-col h3 .n {
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .data-col--control {
+      --col-accent: #0072b2;
+    }
+
+    .data-col--a {
+      --col-accent: #d55e00;
+    }
+
+    .data-col--b {
+      --col-accent: #009e73;
+    }
+
+    .data-section .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .data-section table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .data-section th,
+    .data-section td {
+      padding: 0.4rem 0.55rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .data-section th {
+      font-weight: 600;
+      color: var(--text);
+      background: #f1f5f9;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      box-shadow: 0 1px 0 var(--frame-border);
+    }
+
+    .data-section tbody tr:nth-child(even) {
+      background: #fafbfc;
+    }
+
+    .data-section tbody tr:hover {
+      background: #eef2ff;
+    }
+
+    .data-section td:last-child,
+    .data-section th:last-child {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Plant height by fertilizer treatment</h1>
+    <p class="subtitle">
+      Mock greenhouse trial: 50 plants total (17 Control, 17 Treatment&nbsp;A, 16 Treatment&nbsp;B).
+      Heights are simulated in centimeters with overlapping variability.
+    </p>
+  </header>
+  <div class="chart-area">
+    <div class="chart-frame">
+      <div id="chart" aria-label="Box plot of plant heights by treatment"></div>
+    </div>
+  </div>
+
+  <section class="data-section" aria-labelledby="data-heading">
+    <div class="data-panel">
+      <h2 id="data-heading">Trial data (50 plants)</h2>
+      <p class="data-intro">
+        Same simulated heights as the chart. Plant IDs 1–17 are Control, 18–34 Treatment&nbsp;A, 35–50 Treatment&nbsp;B.
+      </p>
+      <div class="data-columns">
+        <div class="data-col data-col--control">
+          <h3>Control <span class="n">(n = 17)</span></h3>
+          <div class="table-scroll">
+            <table aria-label="Control group heights">
+              <thead>
+                <tr>
+                  <th scope="col">Plant ID</th>
+                  <th scope="col">Height (cm)</th>
+                </tr>
+              </thead>
+              <tbody id="data-tbody-control"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="data-col data-col--a">
+          <h3>Treatment A <span class="n">(n = 17)</span></h3>
+          <div class="table-scroll">
+            <table aria-label="Treatment A heights">
+              <thead>
+                <tr>
+                  <th scope="col">Plant ID</th>
+                  <th scope="col">Height (cm)</th>
+                </tr>
+              </thead>
+              <tbody id="data-tbody-a"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="data-col data-col--b">
+          <h3>Treatment B <span class="n">(n = 16)</span></h3>
+          <div class="table-scroll">
+            <table aria-label="Treatment B heights">
+              <thead>
+                <tr>
+                  <th scope="col">Plant ID</th>
+                  <th scope="col">Height (cm)</th>
+                </tr>
+              </thead>
+              <tbody id="data-tbody-b"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // Okabe–Ito (colorblind-friendly)
+      var COLORS = {
+        control: "#0072B2",
+        treatmentA: "#D55E00",
+        treatmentB: "#009E73",
+      };
+
+      function randn() {
+        var u = 0;
+        var v = 0;
+        while (u === 0) u = Math.random();
+        while (v === 0) v = Math.random();
+        return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+      }
+
+      function sampleHeights(n, meanCm, sdCm) {
+        var out = [];
+        for (var i = 0; i < n; i++) {
+          var h = meanCm + sdCm * randn();
+          if (h < 8) h = 8;
+          out.push(Math.round(h * 10) / 10);
+        }
+        return out;
+      }
+
+      // 50 rows: Control < A < B (B slightly above A); generous overlap in spread
+      var nControl = 17;
+      var nA = 17;
+      var nB = 16;
+
+      var yControl = sampleHeights(nControl, 32, 5.2);
+      var yA = sampleHeights(nA, 38, 5.5);
+      var yB = sampleHeights(nB, 41.5, 5.4);
+
+      function fillTreatmentTable(tbodyId, startPlantId, heights) {
+        var tbody = document.getElementById(tbodyId);
+        var frag = document.createDocumentFragment();
+        var id = startPlantId;
+        for (var i = 0; i < heights.length; i++) {
+          var tr = document.createElement("tr");
+          var tdId = document.createElement("td");
+          tdId.textContent = String(id++);
+          var tdH = document.createElement("td");
+          tdH.textContent = String(heights[i]);
+          tr.appendChild(tdId);
+          tr.appendChild(tdH);
+          frag.appendChild(tr);
+        }
+        tbody.appendChild(frag);
+      }
+
+      fillTreatmentTable("data-tbody-control", 1, yControl);
+      fillTreatmentTable("data-tbody-a", 18, yA);
+      fillTreatmentTable("data-tbody-b", 35, yB);
+
+      var traces = [
+        {
+          type: "box",
+          name: "Control",
+          y: yControl,
+          marker: { color: COLORS.control },
+          line: { color: COLORS.control },
+        },
+        {
+          type: "box",
+          name: "Treatment A",
+          y: yA,
+          marker: { color: COLORS.treatmentA },
+          line: { color: COLORS.treatmentA },
+        },
+        {
+          type: "box",
+          name: "Treatment B",
+          y: yB,
+          marker: { color: COLORS.treatmentB },
+          line: { color: COLORS.treatmentB },
+        },
+      ];
+
+      var layout = {
+        template: "plotly_white",
+        title: {
+          text: "Distribution of plant heights across fertilizer treatments",
+          font: { size: 17 },
+        },
+        xaxis: {
+          title: { text: "Fertilizer treatment" },
+        },
+        yaxis: {
+          title: { text: "Plant height (cm)" },
+          zeroline: false,
+        },
+        boxmode: "group",
+        showlegend: true,
+        legend: { orientation: "h", yanchor: "bottom", y: 1.02, xanchor: "center", x: 0.5 },
+        margin: { l: 56, r: 24, t: 72, b: 56 },
+        font: { family: "system-ui, sans-serif", size: 13, color: "#1a2332" },
+      };
+
+      var config = { responsive: true, displayModeBar: true, displaylogo: false };
+
+      var chartEl = document.getElementById("chart");
+
+      Plotly.newPlot(chartEl, traces, layout, config);
+
+      var resizeTimer;
+      window.addEventListener("resize", function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          Plotly.Plots.resize(chartEl);
+        }, 100);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scatter & Histogram</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="graph-page">
+  <div class="graph-wrapper">
+    <div class="graph-container" id="plot"></div>
+  </div>
+  <script>
+    const yData = [2.1, 3.9, 4.2, 5.1, 5.8, 6.2, 7.1, 7.9, 8.5, 9.2];
+    const xData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    const traces = [
+      { x: xData, y: yData, type: 'scatter', mode: 'markers', name: 'Data', marker: { size: 12, color: '#22d3ee' } },
+      { x: xData, y: xData.map(x => x), type: 'scatter', mode: 'lines', name: 'y = x', line: { dash: 'dash', width: 2.5, color: '#a78bfa' } },
+      { x: yData, type: 'histogram', name: 'y distribution', marker: { color: 'rgba(34, 211, 238, 0.5)' }, xaxis: 'x2', yaxis: 'y2' }
+    ];
+
+    Plotly.newPlot('plot', traces, {
+      grid: { rows: 2, columns: 1, pattern: 'independent', roworder: 'top to bottom' },
+      margin: { t: 40, r: 40, b: 40, l: 50 },
+      xaxis: { title: 'x', gridcolor: '#404040', color: '#e8e8e8' },
+      yaxis: { title: 'y', gridcolor: '#404040', color: '#e8e8e8' },
+      xaxis2: { title: 'y value', gridcolor: '#404040', color: '#e8e8e8' },
+      yaxis2: { title: 'Count', gridcolor: '#404040', color: '#e8e8e8' },
+      showlegend: true,
+      paper_bgcolor: '#252525',
+      plot_bgcolor: '#252525',
+      font: { color: '#e8e8e8' },
+      legend: { font: { color: '#e8e8e8' } }
+    }, { responsive: true });
+  </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free-Body Diagram</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="graph-page">
+  <div class="graph-wrapper">
+    <div class="graph-container" id="svg-container"></div>
+  </div>
+  <script>
+    const width = 600;
+    const height = 400;
+    const center = { x: width / 2, y: height / 2 };
+
+    const svg = d3.select('#svg-container')
+      .append('svg')
+      .attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .style('display', 'block');
+
+    const defs = svg.append('defs');
+    defs.append('marker')
+      .attr('id', 'arrow')
+      .attr('viewBox', '-0 -5 10 10')
+      .attr('refX', 8)
+      .attr('refY', 0)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M 0,-5 L 10,0 L 0,5 z')
+      .attr('fill', 'currentColor');
+
+    const forces = [
+      { x: 0, y: -100, label: 'N', color: '#22d3ee' },
+      { x: 0, y: 100, label: 'W', color: '#f59e0b' },
+      { x: -80, y: 0, label: 'f', color: '#a78bfa' },
+      { x: 100, y: 0, label: 'F', color: '#34d399' }
+    ];
+
+    const g = svg.append('g').attr('transform', `translate(${center.x}, ${center.y})`);
+
+    g.append('rect')
+      .attr('x', -40)
+      .attr('y', -30)
+      .attr('width', 80)
+      .attr('height', 60)
+      .attr('fill', '#353535')
+      .attr('stroke', '#e8e8e8')
+      .attr('stroke-width', 3);
+
+    forces.forEach(f => {
+      g.append('line')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', f.x)
+        .attr('y2', f.y)
+        .attr('stroke', f.color)
+        .attr('stroke-width', 3)
+        .attr('marker-end', 'url(#arrow)');
+      const offset = 15;
+      g.append('text')
+        .attr('x', f.x + (f.x >= 0 ? offset : -offset))
+        .attr('y', f.y + (f.y >= 0 ? offset : -offset))
+        .attr('fill', f.color)
+        .attr('text-anchor', f.x >= 0 ? 'start' : 'end')
+        .attr('font-size', 14)
+        .attr('font-weight', 'bold')
+        .text(f.label);
+    });
+  </script>
+</body>
+</html>

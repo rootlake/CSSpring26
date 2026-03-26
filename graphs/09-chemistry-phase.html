@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase Diagram</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="graph-page">
+  <div class="graph-wrapper">
+    <div class="graph-container" id="plot"></div>
+  </div>
+  <script>
+    const solidLiquid = { x: [0, 1, 2, 3, 4, 5], y: [0, 0.5, 1, 1.5, 2, 2.5] };
+    const liquidGas = { x: [2, 3, 4, 5, 6, 7], y: [2, 1.8, 1.6, 1.4, 1.2, 1] };
+    const solidGas = { x: [0, 0.5, 1, 1.5, 2], y: [0, 0.3, 0.6, 0.9, 1.2] };
+
+    const triplePoint = { x: [1.2], y: [0.8] };
+
+    Plotly.newPlot('plot', [
+      { x: solidLiquid.x, y: solidLiquid.y, type: 'scatter', mode: 'lines', name: 'Solid-Liquid', line: { width: 2.5, color: '#6366f1' } },
+      { x: liquidGas.x, y: liquidGas.y, type: 'scatter', mode: 'lines', name: 'Liquid-Gas', line: { width: 2.5, color: '#22d3ee' } },
+      { x: solidGas.x, y: solidGas.y, type: 'scatter', mode: 'lines', name: 'Solid-Gas', line: { width: 2.5, color: '#34d399' } },
+      { x: triplePoint.x, y: triplePoint.y, type: 'scatter', mode: 'markers', name: 'Triple point', marker: { size: 12, color: '#f59e0b' } }
+    ], {
+      margin: { t: 40, r: 40, b: 50, l: 50 },
+      xaxis: { title: 'Temperature', zeroline: false, gridcolor: '#404040', color: '#e8e8e8' },
+      yaxis: { title: 'Pressure', zeroline: false, gridcolor: '#404040', color: '#e8e8e8' },
+      showlegend: true,
+      paper_bgcolor: '#252525',
+      plot_bgcolor: '#252525',
+      font: { color: '#e8e8e8' },
+      legend: { font: { color: '#e8e8e8' } },
+      annotations: [
+        { x: 1.5, y: 0.5, text: 'Solid', showarrow: false, font: { size: 12, color: '#e8e8e8' } },
+        { x: 4, y: 1.5, text: 'Liquid', showarrow: false, font: { size: 12, color: '#e8e8e8' } },
+        { x: 5, y: 0.5, text: 'Gas', showarrow: false, font: { size: 12, color: '#e8e8e8' } }
+      ]
+    }, { responsive: true });
+  </script>
+</body>
+</html>

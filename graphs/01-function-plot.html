@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Function Plot - y = f(x)</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="graph-page">
+  <div class="graph-wrapper">
+    <div class="graph-container" id="plot"></div>
+  </div>
+  <script>
+    const x = [];
+    for (let i = -5; i <= 5; i += 0.1) {
+      x.push(i);
+    }
+    const y = x.map(v => v * v - 2 * v - 3);
+
+    Plotly.newPlot('plot', [{
+      x, y,
+      type: 'scatter',
+      mode: 'lines',
+      name: 'y = x² − 2x − 3',
+      line: { width: 2.5, color: '#a78bfa' }
+    }], {
+      margin: { t: 40, r: 40, b: 50, l: 50 },
+      xaxis: { title: 'x', zeroline: true, gridcolor: '#404040', color: '#e8e8e8' },
+      yaxis: { title: 'y', zeroline: true, gridcolor: '#404040', color: '#e8e8e8' },
+      showlegend: true,
+      paper_bgcolor: '#252525',
+      plot_bgcolor: '#252525',
+      font: { color: '#e8e8e8' },
+      legend: { font: { color: '#e8e8e8' } }
+    }, { responsive: true });
+  </script>
+</body>
+</html>

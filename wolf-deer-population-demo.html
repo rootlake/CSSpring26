@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wolf & elk populations — Yellowstone (sample series)</title>
+  <style>
+    :root {
+      --bg: #e8ebe4;
+      --surface: #f7f8f4;
+      --text: #1c2419;
+      --muted: #4d5c4a;
+      --wolf: #2c3e50;
+      --elk: #8b4513;
+      --grid: rgba(28, 36, 25, 0.12);
+      --border: #c5cbbf;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 1.25rem 1.35rem 2rem;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-size: clamp(1.2rem, 2.8vw, 1.55rem);
+      font-weight: 700;
+      margin: 0 0 0.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      margin: 0 0 1rem;
+      font-size: 0.92rem;
+      color: var(--muted);
+      max-width: 52rem;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.1rem 1.15rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(28, 36, 25, 0.06);
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      vertical-align: middle;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.5rem;
+      margin-top: 0.65rem;
+      font-size: 0.85rem;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .swatch {
+      width: 1.1rem;
+      height: 0.22rem;
+      border-radius: 1px;
+    }
+
+    .swatch.wolf {
+      background: var(--wolf);
+    }
+
+    .swatch.elk {
+      background: var(--elk);
+    }
+
+    h2 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 0 0 0.5rem;
+      font-weight: 650;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .data-table th,
+    .data-table td {
+      text-align: right;
+      padding: 0.35rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table th:first-child,
+    .data-table td:first-child {
+      text-align: left;
+    }
+
+    .data-table th {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .sources {
+      font-size: 0.8rem;
+      color: var(--muted);
+      max-width: 52rem;
+    }
+
+    .sources a {
+      color: #1a5f4a;
+    }
+
+    .note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Wolves and elk in Yellowstone National Park</h1>
+  <p class="lead">
+    Elk (<em>Cervus canadensis</em>) are cervids—the same family as deer, moose, and caribou—and are the main large ungulate monitored on Yellowstone’s northern range alongside gray wolves. Wolves are year-end totals <strong>inside the park</strong> (NPS Wolf Project). Elk benchmarks are winter aerial-style counts of the <strong>Northern Yellowstone elk herd</strong>; values between survey years are <strong>linearly interpolated</strong> for plotting only.
+  </p>
+
+  <div class="panel">
+    <div class="chart-wrap">
+      <canvas id="chart" width="900" height="420" aria-label="Line chart of wolf and elk counts"></canvas>
+    </div>
+    <div class="legend">
+      <span><i class="swatch wolf"></i> Gray wolves in YNP (Dec. total)</span>
+      <span><i class="swatch elk"></i> Northern herd elk (interpolated between surveys)</span>
+    </div>
+    <p class="note">Dual vertical scales: left axis = wolves; right axis = elk. Correlation is not causation—hunting, bears, drought, and winter severity also moved elk numbers.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Sample rows (JSON-backed)</h2>
+    <table class="data-table" id="sampleTable">
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Wolves</th>
+          <th>Elk (interp.)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <section class="sources">
+    <h2>Sources</h2>
+    <ul>
+      <li>
+        <strong>Wolves (1995–2024):</strong> Yellowstone National Park Wolf Project year-end totals (e.g. annual reports linked from
+        <a href="https://www.nps.gov/yell/learn/nature/wolf-reports.htm">NPS Yellowstone wolf reports</a>); same figures are tabulated in the Wikipedia article
+        <a href="https://en.wikipedia.org/wiki/Yellowstone_wolves">Yellowstone wolves</a> for convenience.
+      </li>
+      <li>
+        <strong>Elk benchmarks:</strong> 1995 and 2004 northern herd counts (~16,791 and ~8,335) as summarized in ecological assessments of the northern range (widely cited alongside wolf recovery); 2008 winter survey (~6,279) reported in press summaries of the cooperative aerial count; ~6,037 (2010) and ~3,915 (2013) from northern herd reporting in park/cooperator news summaries; March 2024 classification count <strong>5,597</strong> in
+        <a href="https://www.nps.gov/yell/learn/nature/upload/2024-YELL-Wolf-Cougar-and-Elk-Report.pdf">NPS 2024 Wolf, Cougar, &amp; Elk Report</a> (PDF). Interpolated years are illustrative connectors only.
+      </li>
+    </ul>
+  </section>
+
+  <script>
+    (function () {
+      /** @type {{ year: number, wolves: number }[]} NPS YNP year-end wolf totals (Wolf Project). */
+      const WOLF_BY_YEAR = [
+        { year: 1995, wolves: 21 },
+        { year: 1996, wolves: 51 },
+        { year: 1997, wolves: 86 },
+        { year: 1998, wolves: 112 },
+        { year: 1999, wolves: 118 },
+        { year: 2000, wolves: 119 },
+        { year: 2001, wolves: 132 },
+        { year: 2002, wolves: 148 },
+        { year: 2003, wolves: 174 },
+        { year: 2004, wolves: 171 },
+        { year: 2005, wolves: 118 },
+        { year: 2006, wolves: 136 },
+        { year: 2007, wolves: 171 },
+        { year: 2008, wolves: 124 },
+        { year: 2009, wolves: 96 },
+        { year: 2010, wolves: 97 },
+        { year: 2011, wolves: 98 },
+        { year: 2012, wolves: 83 },
+        { year: 2013, wolves: 95 },
+        { year: 2014, wolves: 104 },
+        { year: 2015, wolves: 98 },
+        { year: 2016, wolves: 108 },
+        { year: 2017, wolves: 97 },
+        { year: 2018, wolves: 80 },
+        { year: 2019, wolves: 94 },
+        { year: 2020, wolves: 123 },
+        { year: 2021, wolves: 97 },
+        { year: 2022, wolves: 108 },
+        { year: 2023, wolves: 124 },
+        { year: 2024, wolves: 108 }
+      ];
+
+      /** Survey anchors for northern herd elk; gaps filled by linear interpolation for chart. */
+      const ELK_ANCHORS = [
+        { year: 1995, elk: 16791 },
+        { year: 2004, elk: 8335 },
+        { year: 2008, elk: 6279 },
+        { year: 2010, elk: 6037 },
+        { year: 2013, elk: 3915 },
+        { year: 2024, elk: 5597 }
+      ];
+
+      function interpolateElk(year) {
+        if (year <= ELK_ANCHORS[0].year) return ELK_ANCHORS[0].elk;
+        const last = ELK_ANCHORS[ELK_ANCHORS.length - 1];
+        if (year >= last.year) return last.elk;
+        for (let i = 0; i < ELK_ANCHORS.length - 1; i++) {
+          const a = ELK_ANCHORS[i];
+          const b = ELK_ANCHORS[i + 1];
+          if (year >= a.year && year <= b.year) {
+            const t = (year - a.year) / (b.year - a.year);
+            return Math.round(a.elk + t * (b.elk - a.elk));
+          }
+        }
+        return last.elk;
+      }
+
+      const series = WOLF_BY_YEAR.map((row) => ({
+        year: row.year,
+        wolves: row.wolves,
+        elk: interpolateElk(row.year)
+      }));
+
+      const canvas = document.getElementById("chart");
+      const ctx = canvas.getContext("2d");
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const cssW = canvas.width;
+      const cssH = canvas.height;
+      canvas.style.width = "100%";
+      canvas.style.height = "auto";
+      canvas.width = Math.round(cssW * dpr);
+      canvas.height = Math.round(cssH * dpr);
+      ctx.scale(dpr, dpr);
+
+      const pad = { t: 36, r: 56, b: 44, l: 52 };
+      const plotW = cssW - pad.l - pad.r;
+      const plotH = cssH - pad.t - pad.b;
+
+      const years = series.map((d) => d.year);
+      const yMin = years[0];
+      const yMax = years[years.length - 1];
+      const wolfMax = Math.max(...series.map((d) => d.wolves)) * 1.12;
+      const elkMax = Math.max(...series.map((d) => d.elk)) * 1.08;
+
+      function xScale(y) {
+        return pad.l + ((y - yMin) / (yMax - yMin)) * plotW;
+      }
+      function yWolf(w) {
+        return pad.t + plotH - (w / wolfMax) * plotH;
+      }
+      function yElk(e) {
+        return pad.t + plotH - (e / elkMax) * plotH;
+      }
+
+      ctx.fillStyle = "#f7f8f4";
+      ctx.fillRect(0, 0, cssW, cssH);
+
+      ctx.strokeStyle = "rgba(28, 36, 25, 0.12)";
+      ctx.lineWidth = 1;
+      ctx.font = "11px Segoe UI, system-ui, sans-serif";
+      ctx.fillStyle = "#4d5c4a";
+
+      const gridLines = 5;
+      for (let i = 0; i <= gridLines; i++) {
+        const gy = pad.t + (plotH / gridLines) * i;
+        ctx.beginPath();
+        ctx.moveTo(pad.l, gy);
+        ctx.lineTo(pad.l + plotW, gy);
+        ctx.stroke();
+        const wolfVal = Math.round(wolfMax * (1 - i / gridLines));
+        const elkVal = Math.round(elkMax * (1 - i / gridLines));
+        ctx.textAlign = "right";
+        ctx.fillText(String(wolfVal), pad.l - 6, gy + 4);
+        ctx.textAlign = "left";
+        ctx.fillText(String(elkVal), pad.l + plotW + 8, gy + 4);
+      }
+
+      ctx.save();
+      ctx.translate(pad.l - 42, pad.t + plotH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#2c3e50";
+      ctx.fillText("Wolves in park", 0, 0);
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(pad.l + plotW + 46, pad.t + plotH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#8b4513";
+      ctx.fillText("Northern elk (interp.)", 0, 0);
+      ctx.restore();
+
+      ctx.fillStyle = "#4d5c4a";
+      ctx.textAlign = "center";
+      const tickYears = [1995, 2000, 2005, 2010, 2015, 2020, 2024];
+      for (const ty of tickYears) {
+        if (ty < yMin || ty > yMax) continue;
+        const x = xScale(ty);
+        ctx.beginPath();
+        ctx.moveTo(x, pad.t + plotH);
+        ctx.lineTo(x, pad.t + plotH + 5);
+        ctx.stroke();
+        ctx.fillText(String(ty), x, pad.t + plotH + 18);
+      }
+
+      function drawLine(getY, key, color, width) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        series.forEach((d, i) => {
+          const x = xScale(d.year);
+          const y = getY(d[key]);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+      }
+
+      drawLine(yElk, "elk", "rgba(139, 69, 19, 0.95)", 2.25);
+      drawLine(yWolf, "wolves", "rgba(44, 62, 80, 0.95)", 2.25);
+
+      function scatter(getY, key, color) {
+        ctx.fillStyle = color;
+        series.forEach((d) => {
+          const x = xScale(d.year);
+          const y = getY(d[key]);
+          ctx.beginPath();
+          ctx.arc(x, y, 3, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      scatter(yWolf, "wolves", "#2c3e50");
+      scatter(yElk, "elk", "#8b4513");
+
+      ctx.fillStyle = "#1c2419";
+      ctx.font = "600 14px Segoe UI, system-ui, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Yellowstone: wolves vs. northern elk (interpolated)", pad.l, 22);
+
+      const tbody = document.querySelector("#sampleTable tbody");
+      const show = [1995, 2000, 2005, 2010, 2015, 2020, 2024];
+      for (const y of show) {
+        const row = series.find((r) => r.year === y);
+        if (!row) continue;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${row.year}</td><td>${row.wolves}</td><td>${row.elk.toLocaleString()}</td>`;
+        tbody.appendChild(tr);
+      }
+    })();
+  </script>
+</body>
+</html>

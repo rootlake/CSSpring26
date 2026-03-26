@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circuit Diagram</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="graph-page">
+  <div class="graph-wrapper">
+    <div class="graph-container" id="svg-container"></div>
+  </div>
+  <script>
+    const width = 600;
+    const height = 300;
+
+    const svg = d3.select('#svg-container')
+      .append('svg')
+      .attr('viewBox', `0 0 ${width} ${height}`)
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .style('display', 'block');
+
+    const g = svg.append('g');
+
+    const wire = (x1, y1, x2, y2) => {
+      g.append('line')
+        .attr('x1', x1).attr('y1', y1)
+        .attr('x2', x2).attr('y2', y2)
+        .attr('stroke', '#e8e8e8')
+        .attr('stroke-width', 3);
+    };
+
+    wire(50, 150, 150, 150);
+    wire(150, 150, 150, 100);
+    wire(150, 100, 250, 100);
+    wire(250, 100, 250, 150);
+    wire(250, 150, 350, 150);
+    wire(350, 150, 350, 200);
+    wire(350, 200, 450, 200);
+    wire(450, 200, 450, 150);
+    wire(450, 150, 550, 150);
+    wire(550, 150, 50, 150);
+
+    g.append('rect').attr('x', 120).attr('y', 130).attr('width', 60).attr('height', 40)
+      .attr('fill', 'none').attr('stroke', '#e8e8e8').attr('stroke-width', 3);
+    g.append('text').attr('x', 150).attr('y', 155).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', '#e8e8e8').text('V');
+
+    g.append('rect').attr('x', 320).attr('y', 130).attr('width', 60).attr('height', 40)
+      .attr('fill', 'none').attr('stroke', '#e8e8e8').attr('stroke-width', 3);
+    g.append('text').attr('x', 350).attr('y', 155).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', '#e8e8e8').text('R');
+
+    g.append('circle').attr('cx', 150).attr('cy', 150).attr('r', 4).attr('fill', '#e8e8e8');
+    g.append('circle').attr('cx', 250).attr('cy', 150).attr('r', 4).attr('fill', '#e8e8e8');
+    g.append('circle').attr('cx', 350).attr('cy', 150).attr('r', 4).attr('fill', '#e8e8e8');
+    g.append('circle').attr('cx', 450).attr('cy', 150).attr('r', 4).attr('fill', '#e8e8e8');
+  </script>
+</body>
+</html>

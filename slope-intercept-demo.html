@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slope-Intercept Form: y = mx + b</title>
+  <style>
+    /* ---------- Screen layout ---------- */
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --text: #1a2332;
+      --muted: #5c6b7f;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --border: #e2e8f0;
+      --grid-line: #cbd5e1;
+      --axis: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1.5rem;
+      max-width: 56rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .teacher-note {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.15rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .teacher-note h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin: 0 0 0.5rem;
+      font-weight: 600;
+    }
+
+    .teacher-note p {
+      margin: 0;
+      font-size: 0.98rem;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.15rem 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .equation {
+      font-family: "Courier New", Courier, monospace;
+      font-size: clamp(1.15rem, 3vw, 1.45rem);
+      font-weight: 600;
+      text-align: center;
+      padding: 0.65rem 0.5rem;
+      background: var(--accent-soft);
+      border-radius: 6px;
+      color: #1e3a8a;
+      margin-bottom: 0.75rem;
+    }
+
+    .controls {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (min-width: 520px) {
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .control-row label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+
+    .control-row .value {
+      display: inline-block;
+      margin-left: 0.35rem;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: "Courier New", Courier, monospace;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      max-width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .presets button {
+      font-family: inherit;
+      font-size: 0.88rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .presets button:hover,
+    .presets button:focus-visible {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      outline: none;
+    }
+
+    .observations {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .observations li {
+      font-size: 0.95rem;
+      padding: 0.5rem 0.65rem;
+      background: #f1f5f9;
+      border-radius: 6px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .observations strong {
+      color: var(--muted);
+      font-weight: 600;
+      margin-right: 0.35rem;
+    }
+
+    .canvas-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.5rem 0;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      max-width: 520px;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    footer {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ---------- Print: one clean sheet ---------- */
+    @media print {
+      @page {
+        size: letter;
+        margin: 0.5in;
+      }
+
+      body {
+        background: #fff;
+        padding: 0;
+        max-width: none;
+        color: #000;
+        font-size: 11pt;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      h1 {
+        font-size: 18pt;
+        margin-bottom: 0.25rem;
+      }
+
+      .subtitle {
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .teacher-note,
+      .panel {
+        border: 1px solid #999;
+        box-shadow: none;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .equation {
+        background: #eee;
+        color: #000;
+        border: 1px solid #ccc;
+      }
+
+      .observations li {
+        background: #f5f5f5;
+        border-left-color: #333;
+      }
+
+      canvas {
+        max-width: 100%;
+        border: 1px solid #333;
+      }
+
+      footer {
+        color: #555;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Slope-Intercept Form</h1>
+    <p class="subtitle">Interactive graph: <span style="font-family: monospace">y = mx + b</span></p>
+  </header>
+
+  <section class="teacher-note" aria-labelledby="teacher-heading">
+    <h2 id="teacher-heading">For teachers</h2>
+    <p>
+      Use the sliders to change the slope <strong>m</strong> and the y-intercept <strong>b</strong>.
+      The graph updates in real time. The slope tells you direction and steepness; the intercept is where the line
+      meets the vertical axis. Preset buttons jump to common cases for quick discussion.
+    </p>
+  </section>
+
+  <section class="panel" aria-labelledby="eq-heading">
+    <h2 id="eq-heading" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Current equation</h2>
+    <div id="equationDisplay" class="equation" role="status" aria-live="polite">y = 1x + 0</div>
+
+    <div class="presets no-print" role="group" aria-label="Quick presets">
+      <button type="button" id="presetPositive">Positive slope</button>
+      <button type="button" id="presetNegative">Negative slope</button>
+      <button type="button" id="presetHorizontal">Horizontal line</button>
+    </div>
+
+    <div class="controls no-print">
+      <div class="control-row">
+        <label for="slopeM">
+          Slope <em>m</em> (−5 to 5, step 0.5)
+          <span id="mValue" class="value">1</span>
+        </label>
+        <input type="range" id="slopeM" min="-5" max="5" step="0.5" value="1" />
+      </div>
+      <div class="control-row">
+        <label for="interceptB">
+          y-intercept <em>b</em> (−10 to 10)
+          <span id="bValue" class="value">0</span>
+        </label>
+        <input type="range" id="interceptB" min="-10" max="10" step="1" value="0" />
+      </div>
+    </div>
+
+    <ul class="observations" id="observations" aria-live="polite">
+      <li id="obsTrend"><strong>Trend:</strong> —</li>
+      <li id="obsYAxis"><strong>Crosses y-axis:</strong> —</li>
+      <li id="obsSteep"><strong>Steepness:</strong> —</li>
+    </ul>
+  </section>
+
+  <div class="canvas-wrap">
+    <canvas id="graph" width="520" height="520" aria-label="Coordinate plane with graphed line"></canvas>
+  </div>
+
+  <footer>
+    Plain HTML canvas · Adjust sliders or use presets · Print-friendly layout
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // ---------------------------------------------------------------------------
+      // ELEMENT REFERENCES
+      // Grab the pieces of the page we need to read from or write to.
+      // ---------------------------------------------------------------------------
+      var canvas = document.getElementById("graph");
+      var ctx = canvas.getContext("2d");
+      var slopeInput = document.getElementById("slopeM");
+      var interceptInput = document.getElementById("interceptB");
+      var mValueEl = document.getElementById("mValue");
+      var bValueEl = document.getElementById("bValue");
+      var equationEl = document.getElementById("equationDisplay");
+      var obsTrend = document.getElementById("obsTrend");
+      var obsYAxis = document.getElementById("obsYAxis");
+      var obsSteep = document.getElementById("obsSteep");
+
+      // ---------------------------------------------------------------------------
+      // GRAPH SETUP (math coordinates)
+      // We draw in "world" units where x and y are normal math axes (y goes UP).
+      // The canvas uses screen coordinates (y goes DOWN), so we flip when converting.
+      // ---------------------------------------------------------------------------
+      var world = {
+        xMin: -12,
+        xMax: 12,
+        yMin: -12,
+        yMax: 12
+      };
+
+      // Padding inside the canvas so axis labels and titles fit.
+      var pad = { left: 44, right: 18, top: 18, bottom: 44 };
+
+      function worldToPixelX(x) {
+        var w = canvas.width - pad.left - pad.right;
+        return pad.left + ((x - world.xMin) / (world.xMax - world.xMin)) * w;
+      }
+
+      // Flip y: larger math y should be higher on screen (smaller pixel y).
+      function worldToPixelY(y) {
+        var h = canvas.height - pad.top - pad.bottom;
+        return pad.top + (1 - (y - world.yMin) / (world.yMax - world.yMin)) * h;
+      }
+
+      // ---------------------------------------------------------------------------
+      // FORMATTING HELPERS
+      // Turn numbers into nice strings for the equation and labels.
+      // ---------------------------------------------------------------------------
+      function formatNumber(n) {
+        // Avoid ugly floats like 1.0000000002 from slider math.
+        var rounded = Math.round(n * 1000) / 1000;
+        if (Object.is(rounded, -0)) {
+          rounded = 0;
+        }
+        if (rounded === Math.floor(rounded)) {
+          return String(Math.floor(rounded));
+        }
+        return String(rounded);
+      }
+
+      // Build a readable "y = mx + b" string (hides "1x", handles +/− b).
+      function formatEquation(m, b) {
+        var mStr;
+        if (m === 0) {
+          mStr = "";
+        } else if (m === 1) {
+          mStr = "x";
+        } else if (m === -1) {
+          mStr = "-x";
+        } else {
+          mStr = formatNumber(m) + "x";
+        }
+
+        var bAbs = Math.abs(b);
+        var bPart = "";
+        if (b === 0) {
+          bPart = "";
+        } else if (b > 0) {
+          bPart = m === 0 ? formatNumber(b) : " + " + formatNumber(b);
+        } else {
+          bPart = m === 0 ? formatNumber(b) : " − " + formatNumber(bAbs);
+        }
+
+        if (m === 0) {
+          return "y = " + (bPart || "0");
+        }
+        return "y = " + mStr + (bPart || "");
+      }
+
+      // ---------------------------------------------------------------------------
+      // DRAWING: grid, axes, labels, and the line y = mx + b
+      // ---------------------------------------------------------------------------
+      function drawGrid() {
+        ctx.save();
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.lineWidth = 1;
+
+        // Vertical grid lines at integer x.
+        var xStart = Math.ceil(world.xMin);
+        var xEnd = Math.floor(world.xMax);
+        for (var gx = xStart; gx <= xEnd; gx++) {
+          ctx.beginPath();
+          ctx.moveTo(worldToPixelX(gx), worldToPixelY(world.yMin));
+          ctx.lineTo(worldToPixelX(gx), worldToPixelY(world.yMax));
+          ctx.stroke();
+        }
+
+        // Horizontal grid lines at integer y.
+        var yStart = Math.ceil(world.yMin);
+        var yEnd = Math.floor(world.yMax);
+        for (var gy = yStart; gy <= yEnd; gy++) {
+          ctx.beginPath();
+          ctx.moveTo(worldToPixelX(world.xMin), worldToPixelY(gy));
+          ctx.lineTo(worldToPixelX(world.xMax), worldToPixelY(gy));
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function drawAxes() {
+        ctx.save();
+        ctx.strokeStyle = "#334155";
+        ctx.lineWidth = 1.5;
+        var x0 = worldToPixelX(0);
+        var y0 = worldToPixelY(0);
+
+        // x-axis (horizontal line through y = 0).
+        ctx.beginPath();
+        ctx.moveTo(worldToPixelX(world.xMin), y0);
+        ctx.lineTo(worldToPixelX(world.xMax), y0);
+        ctx.stroke();
+
+        // y-axis (vertical line through x = 0).
+        ctx.beginPath();
+        ctx.moveTo(x0, worldToPixelY(world.yMin));
+        ctx.lineTo(x0, worldToPixelY(world.yMax));
+        ctx.stroke();
+
+        // Axis labels "x" and "y" near the positive ends.
+        ctx.fillStyle = "#334155";
+        ctx.font = "14px Georgia, serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText("x", worldToPixelX(world.xMax) - 8, y0 + 6);
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillText("y", x0 - 8, worldToPixelY(world.yMax) + 4);
+
+        // Tick labels on x-axis (skip 0 to reduce clutter at the origin).
+        ctx.font = "11px Georgia, serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        for (var tx = Math.ceil(world.xMin); tx <= Math.floor(world.xMax); tx++) {
+          if (tx === 0) continue;
+          var px = worldToPixelX(tx);
+          ctx.beginPath();
+          ctx.moveTo(px, y0);
+          ctx.lineTo(px, y0 + 5);
+          ctx.stroke();
+          ctx.fillText(String(tx), px, y0 + 8);
+        }
+
+        // Tick labels on y-axis.
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        for (var ty = Math.ceil(world.yMin); ty <= Math.floor(world.yMax); ty++) {
+          if (ty === 0) continue;
+          var py = worldToPixelY(ty);
+          ctx.beginPath();
+          ctx.moveTo(x0 - 5, py);
+          ctx.lineTo(x0, py);
+          ctx.stroke();
+          ctx.fillText(String(ty), x0 - 8, py);
+        }
+
+        // Small "0" at the origin.
+        ctx.textAlign = "right";
+        ctx.textBaseline = "top";
+        ctx.fillText("0", x0 - 6, y0 + 4);
+
+        ctx.restore();
+      }
+
+      // Clip drawing to the plot area so the line does not spill into padding.
+      function clipToPlot() {
+        ctx.beginPath();
+        ctx.rect(pad.left, pad.top, canvas.width - pad.left - pad.right, canvas.height - pad.top - pad.bottom);
+        ctx.clip();
+      }
+
+      // Draw the line segment across the visible window by connecting endpoints at xMin and xMax.
+      function drawLine(m, b) {
+        ctx.save();
+        clipToPlot();
+        ctx.strokeStyle = "#2563eb";
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = "round";
+
+        var yLeft = m * world.xMin + b;
+        var yRight = m * world.xMax + b;
+        ctx.beginPath();
+        ctx.moveTo(worldToPixelX(world.xMin), worldToPixelY(yLeft));
+        ctx.lineTo(worldToPixelX(world.xMax), worldToPixelY(yRight));
+        ctx.stroke();
+        ctx.restore();
+
+        // Optional: highlight y-intercept point at (0, b) when it is on screen.
+        if (b >= world.yMin && b <= world.yMax) {
+          ctx.save();
+          clipToPlot();
+          var ix = worldToPixelX(0);
+          var iy = worldToPixelY(b);
+          ctx.fillStyle = "#1d4ed8";
+          ctx.beginPath();
+          ctx.arc(ix, iy, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      function redraw(m, b) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawGrid();
+        drawAxes();
+        drawLine(m, b);
+      }
+
+      // ---------------------------------------------------------------------------
+      // OBSERVATIONS (text that updates with m and b)
+      // ---------------------------------------------------------------------------
+      function updateObservations(m, b) {
+        // 1) Trend: as x increases, does y go up, down, or stay flat?
+        var trendText;
+        if (m > 0) {
+          trendText = "The line is <strong>increasing</strong> (as x increases, y increases).";
+        } else if (m < 0) {
+          trendText = "The line is <strong>decreasing</strong> (as x increases, y decreases).";
+        } else {
+          trendText = "The line is <strong>constant</strong> (horizontal: y stays the same for all x).";
+        }
+        obsTrend.innerHTML = "<strong>Trend:</strong> " + trendText;
+
+        // 2) Where the line crosses the y-axis: always at x = 0, so the point is (0, b).
+        obsYAxis.innerHTML =
+          "<strong>Crosses y-axis:</strong> At the point <strong>(0, " + formatNumber(b) + ")</strong> — that value is <em>b</em>.";
+
+        // 3) Steepness: compare |m| to simple cutoffs (vertical lines are not possible here).
+        var steepness;
+        if (m === 0) {
+          steepness = "<strong>horizontal</strong> (slope is zero).";
+        } else {
+          var absM = Math.abs(m);
+          if (absM >= 2) {
+            steepness = "relatively <strong>steep</strong> for this window (|m| ≥ 2).";
+          } else if (absM <= 0.5) {
+            steepness = "relatively <strong>shallow</strong> (|m| ≤ 0.5).";
+          } else {
+            steepness = "<strong>moderate</strong> steepness (between shallow and steep).";
+          }
+        }
+        obsSteep.innerHTML =
+          "<strong>Steepness:</strong> The line is " +
+          steepness +
+          " <em>Vertical slope does not apply</em> here (vertical lines are not expressible as y = mx + b).";
+      }
+
+      // ---------------------------------------------------------------------------
+      // MAIN UPDATE: read sliders, refresh equation text, graph, and observations.
+      // ---------------------------------------------------------------------------
+      function readSlope() {
+        return parseFloat(slopeInput.value, 10);
+      }
+
+      function readIntercept() {
+        return parseInt(interceptInput.value, 10);
+      }
+
+      function updateAll() {
+        var m = readSlope();
+        var b = readIntercept();
+        mValueEl.textContent = formatNumber(m);
+        bValueEl.textContent = formatNumber(b);
+        equationEl.textContent = formatEquation(m, b);
+        redraw(m, b);
+        updateObservations(m, b);
+      }
+
+      // ---------------------------------------------------------------------------
+      // PRESET BUTTONS: jump to useful examples for class discussion.
+      // ---------------------------------------------------------------------------
+      document.getElementById("presetPositive").addEventListener("click", function () {
+        slopeInput.value = "2";
+        interceptInput.value = "1";
+        updateAll();
+      });
+
+      document.getElementById("presetNegative").addEventListener("click", function () {
+        slopeInput.value = "-2";
+        interceptInput.value = "3";
+        updateAll();
+      });
+
+      document.getElementById("presetHorizontal").addEventListener("click", function () {
+        slopeInput.value = "0";
+        interceptInput.value = "-2";
+        updateAll();
+      });
+
+      slopeInput.addEventListener("input", updateAll);
+      interceptInput.addEventListener("input", updateAll);
+
+      // First paint when the page loads.
+      updateAll();
+    })();
+  </script>
+</body>
+</html>
